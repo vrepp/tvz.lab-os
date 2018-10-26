@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:1_System/1_System.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:1_StandardC/1_StandardC.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:2_Numbers/2_Numbers.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:2_Processes/2_Processes.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:3_MyModule/3_MyModule.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:3_AllProcesses/3_AllProcesses.xcodeproj">
+   </FileRef>
+</Workspace>
