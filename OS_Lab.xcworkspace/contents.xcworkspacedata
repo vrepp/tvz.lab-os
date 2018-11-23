@@ -19,4 +19,13 @@
    <FileRef
       location = "group:3_AllProcesses/3_AllProcesses.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:4_Processes/4_Processes.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:4_Threads/4_Threads.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:4_CheckIn/4_CheckIn.xcodeproj">
+   </FileRef>
 </Workspace>
