@@ -28,4 +28,10 @@
    <FileRef
       location = "group:4_CheckIn/4_CheckIn.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:5_CheckIn/5_CheckIn.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:5_ThreadsLifecycle/5_ThreadsLifecycle.xcodeproj">
+   </FileRef>
 </Workspace>

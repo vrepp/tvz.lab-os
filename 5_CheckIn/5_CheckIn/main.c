@@ -1,8 +1,8 @@
 //
 //  main.c
-//  4_CheckIn
+//  5_CheckIn
 //
-//  Created by Valentin Rep on 12/11/2018.
+//  Created by Valentin Rep on 24/11/2018.
 //  Copyright © 2018 ViCon. All rights reserved.
 //
 
@@ -25,6 +25,8 @@ typedef struct {
 
 static Spots arrSpots = { .data = {0} };
 
+pthread_mutex_t lock;
+
 void printSpots(Spots spots) {
     printf("\n");
     for ( int i = 0; i < FIELD_SIZE; i++ ) {
@@ -42,16 +44,6 @@ void loginToCloud() {
     sleep(loginTime);
 }
 
-void reserveSpot(int spot) {
-    int reserveTime = 1 + (rand() % MAX_RESERVE_TIME);
-    //printf("Reserving the spot (%d s)...\n", reserveTime);
-    sleep(reserveTime);
-    
-    int x = spot / FIELD_SIZE;
-    int y = spot % FIELD_SIZE;
-    arrSpots.data[x][y] = 1;
-}
-
 int selectSpot(Spots spots) {
     int spot = (rand() % NUM_PASSENGERS);
     
@@ -60,6 +52,7 @@ int selectSpot(Spots spots) {
 
 Spots getSpots() {
     Spots spots;
+    
     spots = arrSpots;
     
     int fetchTime = 1 + (rand() % MAX_FETCH_TIME);
@@ -67,6 +60,17 @@ Spots getSpots() {
     sleep(fetchTime);
     
     return spots;
+}
+
+void reserveSpot(int spot) {
+    int reserveTime = 1 + (rand() % MAX_RESERVE_TIME);
+    //printf("Reserving the spot (%d s)...\n", reserveTime);
+    sleep(reserveTime);
+    
+    int x = spot / FIELD_SIZE;
+    int y = spot % FIELD_SIZE;
+    
+    arrSpots.data[x][y] = 1;
 }
 
 void *checkInProcess(void *p) {
@@ -77,7 +81,9 @@ void *checkInProcess(void *p) {
     
     // 2. get seats
     Spots spots;
+    pthread_mutex_lock(&lock);
     spots = getSpots();
+    pthread_mutex_unlock(&lock);
     
     // 3. select a spot
     int spot = selectSpot(spots);
@@ -91,7 +97,9 @@ void *checkInProcess(void *p) {
     }
     
     // 5. set spot to 'reserved'
+    //pthread_mutex_lock(&lock);
     reserveSpot(spot);
+    //pthread_mutex_unlock(&lock);
     
     pthread_exit(NULL);
 }
@@ -122,6 +130,11 @@ int main(int argc, const char * argv[]) {
     pthread_t threads[NUM_PASSENGERS];
     int i, status;
     
+    if ( pthread_mutex_init(&lock, NULL) != 0 ) {
+        printf("Error on mutex init\n");
+        exit(EXIT_FAILURE);
+    }
+    
     // get number of first N passengers; others will have to wait 1s to connect to WiFi
     int N = (rand() % NUM_PASSENGERS);
     
@@ -148,6 +161,11 @@ int main(int argc, const char * argv[]) {
     
     for ( i = 0; i < NUM_PASSENGERS; i++ ) {
         pthread_join(threads[i], NULL);
+    }
+    
+    if ( pthread_mutex_destroy(&lock) != 0 ) {
+        printf("Error on mutex destroy\n");
+        exit(EXIT_FAILURE);
     }
     
     outputFinal();
